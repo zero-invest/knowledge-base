@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人知识库 · 永不遗忘的自己</title>
+<style>
+  * { box-sizing: border-box; }
+  :root{
+    --bg:#fafaf9; --card:#ffffff; --border:#e7e5e4; --border2:#d6d3d1;
+    --text:#1c1917; --muted:#78716c; --faint:#a8a29e;
+    --accent:#0f766e; --accent-soft:#f0fdfa; --accent-line:#99f6e4;
+    --blue:#1d4ed8; --blue-soft:#eff6ff;
+    --purple:#6d28d9; --purple-soft:#f5f3ff;
+    --amber:#b45309; --amber-soft:#fffbeb;
+    --red:#b91c1c; --red-soft:#fef2f2;
+    --radius:12px;
+  }
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:"PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.65;}
+  a{color:var(--accent);}
+  h1,h2,h3,h4{margin:0;font-weight:600;}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px 80px;}
+
+  header.top{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;}
+  .top-inner{max-width:1060px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .brand{font-size:16px;font-weight:600;letter-spacing:.3px;}
+  .brand small{display:block;font-size:11px;color:var(--faint);font-weight:400;letter-spacing:1px;}
+  .kpi{margin-left:auto;display:flex;gap:18px;}
+  .kpi div{text-align:right;}
+  .kpi b{font-size:17px;font-weight:600;display:block;line-height:1.2;}
+  .kpi span{font-size:11px;color:var(--muted);}
+
+  nav.tabs{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:63px;z-index:19;}
+  .tabs-inner{max-width:1060px;margin:0 auto;padding:0 20px;display:flex;gap:4px;overflow-x:auto;}
+  .tab{padding:11px 16px;font-size:14px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:0;border-left:0;border-right:0;font-family:inherit;}
+  .tab:hover{color:var(--text);}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600;}
+
+  .view{display:none;padding-top:22px;}
+  .view.active{display:block;}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+  .card h3{font-size:15px;margin-bottom:4px;}
+  .card .hint{color:var(--muted);font-size:12.5px;margin:2px 0 14px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr;}}
+
+  label.fld{display:block;font-size:12.5px;color:var(--muted);margin:10px 0 4px;}
+  input[type=text],input[type=password],textarea,select{
+    width:100%;padding:9px 11px;border:1px solid var(--border2);border-radius:8px;font-family:inherit;font-size:13.5px;color:var(--text);background:#fff;outline:none;
+  }
+  input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  textarea{resize:vertical;line-height:1.7;}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .row>*{flex:0 0 auto;}
+  .row .grow{flex:1 1 auto;min-width:160px;}
+
+  button{font-family:inherit;font-size:13.5px;padding:9px 15px;border-radius:8px;border:1px solid var(--border2);background:#fff;color:var(--text);cursor:pointer;transition:.12s;}
+  button:hover{border-color:var(--muted);}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+  button.primary:hover{background:#0d655f;}
+  button.ghost{background:transparent;border-color:var(--border);color:var(--muted);}
+  button.mini{padding:5px 10px;font-size:12.5px;}
+  button.danger{border-color:#fecaca;color:var(--red);}
+  button:disabled{opacity:.5;cursor:not-allowed;}
+
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;border:1px solid;line-height:1.6;}
+  .pill.teal{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-line);}
+  .pill.blue{background:var(--blue-soft);color:var(--blue);border-color:#bfdbfe;}
+  .pill.purple{background:var(--purple-soft);color:var(--purple);border-color:#ddd6fe;}
+  .pill.amber{background:var(--amber-soft);color:var(--amber);border-color:#fde68a;}
+  .pill.gray{background:#f5f5f4;color:var(--muted);border-color:var(--border);}
+
+  .entry{border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;background:#fff;}
+  .entry .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:11.5px;color:var(--faint);margin-bottom:7px;}
+  .entry .txt{white-space:pre-wrap;word-break:break-word;line-height:1.75;}
+  .entry .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+  .entry .sum{background:var(--accent-soft);border-left:3px solid var(--accent-line);padding:7px 10px;border-radius:6px;font-size:12.5px;color:#134e4a;margin-bottom:8px;}
+  .tag{display:inline-block;background:#f5f5f4;border:1px solid var(--border);border-radius:999px;padding:1px 8px;font-size:11.5px;margin:0 4px 4px 0;color:#57534e;}
+
+  .notice{border-radius:10px;padding:12px 14px;font-size:13px;margin-bottom:14px;border:1px solid;}
+  .notice.info{background:var(--blue-soft);border-color:#bfdbfe;color:#1e3a8a;}
+  .notice.warn{background:var(--amber-soft);border-color:#fde68a;color:#78350f;}
+  .notice.err{background:var(--red-soft);border-color:#fecaca;color:#7f1d1d;}
+  .notice.ok{background:var(--accent-soft);border-color:var(--accent-line);color:#134e4a;}
+
+  .statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px;}
+  .stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+  .stat b{display:block;font-size:20px;font-weight:600;}
+  .stat span{font-size:11.5px;color:var(--muted);}
+
+  .bar{height:8px;background:#f5f5f4;border-radius:999px;overflow:hidden;}
+  .bar i{display:block;height:100%;background:var(--accent);border-radius:999px;}
+  .barrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12.5px;}
+  .barrow .lbl{width:130px;color:#44403c;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .barrow .bar{flex:1;}
+  .barrow .num{width:44px;text-align:right;color:var(--muted);}
+
+  .drop{border:2px dashed var(--border2);border-radius:12px;padding:26px;text-align:center;color:var(--muted);background:#fff;cursor:pointer;}
+  .drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);}
+
+  .steps{margin:0;padding-left:20px;color:#44403c;}
+  .steps li{margin-bottom:6px;}
+  code{background:#f5f5f4;padding:1px 5px;border-radius:4px;font-size:12px;font-family:Consolas,Monaco,monospace;}
+
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1c1917;color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:99;max-width:80vw;}
+  .toast.show{opacity:1;}
+
+  .modal-bg{position:fixed;inset:0;background:rgba(28,25,23,.45);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal-bg.show{display:flex;}
+  .modal{background:#fff;border-radius:14px;padding:20px;max-width:720px;width:100%;max-height:86vh;overflow:auto;}
+  .modal h3{margin-bottom:6px;}
+
+  .checks{max-height:320px;overflow:auto;border:1px solid var(--border);border-radius:10px;padding:10px;background:#fcfcfb;}
+  .chk{display:flex;gap:9px;padding:7px 6px;border-radius:7px;font-size:13px;align-items:flex-start;}
+  .chk:hover{background:#fff;}
+  .chk input{margin-top:4px;flex:0 0 auto;}
+  .chk .ct{flex:1;min-width:0;}
+  .chk .cm{font-size:11.5px;color:var(--faint);}
+  .hidden{display:none!important;}
+  .spin{display:inline-block;width:12px;height:12px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-1px;margin-right:6px;}
+  @keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">个人知识库<small>永不遗忘的自己</small></div>
+    <div class="kpi">
+      <div><b id="kpiToday">0</b><span>今日采集</span></div>
+      <div><b id="kpiTotal">0</b><span>库内笔记</span></div>
+      <div><b id="kpiStruct">0</b><span>已结构化</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <button class="tab active" data-view="collect">① 采集</button>
+    <button class="tab" data-view="library">② 知识库</button>
+    <button class="tab" data-view="profile">③ 我的画像</button>
+    <button class="tab" data-view="generate">④ 内容生成</button>
+    <button class="tab" data-view="settings">设置 · 帮助</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 采集 ============ -->
+<section class="view active" id="view-collect">
+  <div id="todayNotice"></div>
+
+  <div class="card">
+    <h3>1 · 随手记（随笔 / 灵感）</h3>
+    <p class="hint">想到什么就写下来，按 <b>Ctrl + Enter</b> 保存。空一行可以一次记多条。</p>
+    <textarea id="quickText" rows="4" placeholder="例：今天想到，理财的核心不是选产品，而是先管住自己的情绪……"></textarea>
+    <div class="row" style="margin-top:10px">
+      <select id="quickType" style="width:130px">
+        <option value="essay">随笔</option>
+        <option value="idea">灵感</option>
+      </select>
+      <button class="primary" id="btnQuickSave">保存到今天</button>
+      <span class="hint" style="margin:0">数据只存在你自己的电脑上</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>2 · 导入微信读书笔记（.docx 文件）</h3>
+    <p class="hint">把 <code>D:\看书笔记\理财</code> 里的 docx 直接拖进来，工具会自动按「1、2、3…」编号拆成一条条笔记，并自动识别书名和分类。第一次导入需要联网加载解析库。</p>
+    <div class="drop" id="dropZone">
+      把 .docx 文件拖到这里，或点此选择文件（可多选）
+    </div>
+    <input type="file" id="fileInput" accept=".docx" multiple class="hidden">
+    <div id="docxPreview" style="margin-top:14px"></div>
+  </div>
+
+  <div class="card">
+    <h3>3 · 粘贴导入（从微信读书 App 复制出来的文字）</h3>
+    <p class="hint">在微信读书里选中划线 → 复制 → 粘到下面。工具会自动拆条、去掉重复。</p>
+    <textarea id="pasteText" rows="6" placeholder="把复制的内容粘贴到这里……"></textarea>
+    <div class="row" style="margin-top:10px">
+      <input type="text" id="pasteBook" placeholder="书名（可留空）" class="grow" style="max-width:220px">
+      <input type="text" id="pasteCategory" placeholder="分类，如：理财" style="max-width:150px">
+      <button id="btnPastePreview">预览拆条结果</button>
+    </div>
+    <div id="pastePreview" style="margin-top:14px"></div>
+  </div>
+</section>
+
+<!-- ============ 知识库 ============ -->
+<section class="view" id="view-library">
+  <div class="statrow" id="libStats"></div>
+
+  <div class="card">
+    <div class="row">
+      <input type="text" id="libSearch" placeholder="搜索笔记内容、书名、标签…" class="grow">
+      <select id="libSource" style="width:150px">
+        <option value="">全部来源</option>
+        <option value="weread_docx">docx 导入</option>
+        <option value="paste">粘贴导入</option>
+        <option value="manual">随手记</option>
+        <option value="generated">生成内容</option>
+      </select>
+      <select id="libCategory" style="width:150px"><option value="">全部分类</option></select>
+      <button id="btnReview" class="ghost">随机回顾旧笔记</button>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="btnStructBatch" class="primary">AI 批量结构化（未处理的）</button>
+      <button id="btnStructCopy">批量提示词（手动模式）</button>
+      <span class="hint" style="margin:0" id="structStatus">结构化 = 给每条笔记补上摘要、主题标签和关键概念。没填 API Key 也不影响，用「手动模式」把提示词贴到 DeepSeek 网页版即可。</span>
+    </div>
+  </div>
+
+  <div id="reviewBox"></div>
+  <div id="libList"></div>
+</section>
+
+<!-- ============ 画像 ============ -->
+<section class="view" id="view-profile">
+  <div class="card">
+    <h3>我的知识画像（本地统计，不联网也算）</h3>
+    <p class="hint">这部分由你自己电脑上的数据算出来，用来观察「我在关注什么、有什么变化」。</p>
+    <div id="profileStats"></div>
+  </div>
+
+  <div class="card">
+    <h3>文风样本（写文章时让 AI 模仿你）</h3>
+    <p class="hint">这里放你自己写的原话。AI 会照这个语气写，比任何「风格描述」都准。随手记里的随笔会自动被选中。</p>
+    <textarea id="styleBox" rows="6" placeholder="粘一段你自己写的文字（越像你就越好）……"></textarea>
+    <div class="row" style="margin-top:10px">
+      <button id="btnStyleFromEssays">从我的随笔自动填充</button>
+      <button class="primary" id="btnStyleSave">保存文风样本</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>AI 归纳画像（越用越懂你）</h3>
+    <p class="hint">AI 会读你的笔记样本，输出一份「你是谁」的画像，写文章时会自动带上。点击下面两个按钮之一：</p>
+    <div class="row">
+      <button class="primary" id="btnProfileAI">AI 直接生成</button>
+      <button id="btnProfileCopy">复制提示词（手动模式）</button>
+    </div>
+    <div id="profileOutWrap" class="hidden" style="margin-top:12px">
+      <textarea id="profileOut" rows="12"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="primary" id="btnProfileSave">保存为画像版本</button>
+        <button id="btnProfileCopyOut">复制内容</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>画像历史版本</h3>
+    <p class="hint">每次保存都会留档，可以看到「几个月前的我」。</p>
+    <div id="profileHistory"></div>
+  </div>
+</section>
+
+<!-- ============ 生成 ============ -->
+<section class="view" id="view-generate">
+  <div class="card">
+    <h3>第一步 · 定选题</h3>
+    <p class="hint">填一个主题，工具会从你的知识库里挑出最相关的笔记当素材；留空则由工具按「最近积累最多的主题」自动挑。</p>
+    <div class="row">
+      <input type="text" id="genTopic" placeholder="例：普通人如何建立自己的认知储备" class="grow">
+      <button id="btnGenSearch">检索素材</button>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <select id="genKind" style="width:170px">
+        <option>读书感悟</option>
+        <option>认知随笔</option>
+        <option>理财心得</option>
+        <option>方法干货</option>
+      </select>
+      <select id="genLen" style="width:140px">
+        <option value="800">约 800 字</option>
+        <option value="1200" selected>约 1200 字</option>
+        <option value="1800">约 1800 字</option>
+      </select>
+      <select id="genCount" style="width:150px">
+        <option value="6">参考 6 条笔记</option>
+        <option value="10" selected>参考 10 条笔记</option>
+        <option value="15">参考 15 条笔记</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>第二步 · 挑素材</h3>
+    <p class="hint">这些是从你知识库里检索出来的相关笔记，默认全选，可以取消不想要的。</p>
+    <div id="genMaterials" class="checks">点上面的「检索素材」开始。</div>
+  </div>
+
+  <div class="card">
+    <h3>第三步 · 出初稿</h3>
+    <div class="row">
+      <button class="primary" id="btnGenAI">AI 直接生成初稿</button>
+      <button id="btnGenCopy">复制提示词（手动模式）</button>
+      <label class="row" style="margin:0;font-size:12.5px;color:var(--muted)"><input type="checkbox" id="genDisclaimer" checked style="width:auto"> 自动加免责声明（理财类建议勾选）</label>
+    </div>
+    <div id="genOutWrap" class="hidden" style="margin-top:12px">
+      <textarea id="genOut" rows="18"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="primary" id="btnGenCopyOut">复制正文</button>
+        <button id="btnGenDownload">下载 .md 文件</button>
+        <button id="btnGenToLib">存回知识库</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 设置 ============ -->
+<section class="view" id="view-settings">
+  <div class="card">
+    <h3>DeepSeek 接口设置</h3>
+    <p class="hint">Key 只保存在你这个浏览器里，不会上传到任何别的地方。申请地址：platform.deepseek.com</p>
+    <label class="fld">API Key</label>
+    <div class="row">
+      <input type="password" id="setKey" placeholder="sk-..." class="grow">
+      <button id="btnToggleKey" class="mini">显示</button>
+    </div>
+    <div class="grid2">
+      <div>
+        <label class="fld">接口地址</label>
+        <input type="text" id="setBase" placeholder="https://api.deepseek.com">
+      </div>
+      <div>
+        <label class="fld">模型名</label>
+        <input type="text" id="setModel" list="modelList" placeholder="deepseek-v4-flash">
+        <datalist id="modelList">
+          <option value="deepseek-v4-flash">deepseek-v4-flash（快，日常够用）</option>
+          <option value="deepseek-v4-pro">deepseek-v4-pro（更强，写文章用）</option>
+          <option value="deepseek-chat">deepseek-chat（旧名，兼容）</option>
+        </datalist>
+      </div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="primary" id="btnSaveSettings">保存设置</button>
+      <button id="btnTestApi">测试连接</button>
+    </div>
+    <div id="apiStatus" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <h3>备份与恢复（重要）</h3>
+    <p class="hint">数据存在浏览器里。建议每周导出一次备份，放到 <code>D:\看书笔记\知识库工具\</code> 下面。</p>
+    <div class="row">
+      <button class="primary" id="btnExport">导出备份 JSON</button>
+      <button id="btnImport">导入备份 JSON</button>
+      <button class="danger" id="btnClear">清空全部数据</button>
+    </div>
+    <input type="file" id="importInput" accept=".json" class="hidden">
+    <div id="dataInfo" style="margin-top:12px"></div>
+
+    <div style="border-top:1px solid #e7e5e4;margin:16px 0"></div>
+
+    <h3>手机 ↔ 电脑 搬运数据</h3>
+    <p class="hint">手机上记完点「复制数据」→ 粘到微信「文件传输助手」发给自己；换到另一台设备后点「粘贴数据合并导入」，两边数据会自动合起来（按内容去重，不会互相覆盖）。反向也一样。</p>
+    <div class="row">
+      <button id="btnCopyData">复制数据到剪贴板</button>
+      <button id="btnPasteToggle">粘贴数据合并导入</button>
+    </div>
+    <div id="pasteArea" class="hidden" style="margin-top:12px">
+      <label class="fld">把复制的数据粘到这里（电脑 Ctrl+V，手机长按粘贴）</label>
+      <textarea id="pasteData" rows="6" placeholder='以 {"entries" 开头的那一整段'></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="primary" id="btnPasteMerge">合并导入</button>
+        <button id="btnPasteCancel">取消</button>
+      </div>
+    </div>
+    <div id="mobileStatus" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <h3>在手机上记录（凑合可用版）</h3>
+    <ol class="steps">
+      <li><b>把文件装进手机：</b>把 <code>个人知识库.html</code> 发到微信「文件传输助手」发给自己 → 手机上点开这个文件 → 右上角「用其他应用打开」→ 选一个浏览器（Chrome / Safari / 夸克都行）。</li>
+      <li><b>做成"App"：</b>在浏览器里点「分享」→「添加到主屏幕」。以后从桌面图标打开，和 App 一样。</li>
+      <li><b>随时记：</b>用「随手记」或「粘贴导入」记东西，和电脑上完全一样。</li>
+      <li><b>搬回电脑：</b>记完点本页「复制数据到剪贴板」→ 发到微信「文件传输助手」；电脑上打开工具 →「粘贴数据合并导入」→ Ctrl+V → 合并导入。</li>
+      <li><b>记住一件事：</b>两台设备不会自动同步，不主动搬运就是各记各的。建议固定「手机随手记 → 晚上回电脑合并」这个节奏。</li>
+    </ol>
+    <div class="notice info" style="margin-top:14px">
+      <b>为什么这么麻烦：</b>这是纯本地网页，数据存在每台设备各自的浏览器里，不经过任何服务器——好处是不用注册、不用联网、没人能看到你的笔记；代价就是设备之间要你手动搬一次。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>使用说明（照着做就行）</h3>
+    <ol class="steps">
+      <li><b>不买 API 也能用：</b>三个 AI 环节都有「手动模式」——复制提示词 → 粘到 DeepSeek 官网/App 对话框 → 把它的回答粘回工具。完全免费，效果一样。</li>
+      <li><b>（可选）装 Key：</b>想让工具自己跑的话，去 platform.deepseek.com 注册，创建 API Key 填到上面，点保存设置、再点测试连接（显示出模型列表就算通）。</li>
+      <li><b>导入老笔记：</b>到「① 采集」，把 <code>D:\看书笔记\理财</code> 里的 docx 拖进去，确认入库。</li>
+      <li><b>每天 2 分钟：</b>想到什么就写到「随手记」，或者把微信读书里新的划线复制粘贴进来。</li>
+      <li><b>整理笔记：</b>到「② 知识库」点「AI 批量结构化」；没 Key 就点旁边的「批量提示词（手动模式）」，一次 10 条。</li>
+      <li><b>看画像：</b>到「③ 我的画像」点「从我的随笔自动填充」保存文风样本，再用「AI 直接生成」或「复制提示词（手动模式）」得到画像并存档。</li>
+      <li><b>写文章：</b>到「④ 内容生成」填主题 → 检索素材 → 生成初稿 → 复制到公众号后台排版发布。</li>
+      <li><b>每周备份：</b>到本页点「导出备份 JSON」，存到 <code>D:\看书笔记\知识库工具\</code>。</li>
+    </ol>
+    <div class="notice info" style="margin-top:14px">
+      <b>三个 AI 按钮报错（网络或跨域）怎么办：</b>直接用旁边的「手动模式」。单条结构化用笔记卡片上的「手动」，批量用「批量提示词（手动模式）」，画像和写作各有自己的「复制提示词（手动模式）」。
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3 id="modalTitle">提示词（手动模式）</h3>
+    <p class="hint" id="modalHint">复制下面这段，粘到 DeepSeek 官网 / App 里，再把它的回答粘到下面的框。</p>
+    <textarea id="modalPrompt" rows="8" readonly></textarea>
+    <div class="row" style="margin-top:10px">
+      <button class="primary" id="modalCopy">复制提示词</button>
+      <button class="ghost" id="modalClose">关闭</button>
+    </div>
+    <div id="modalResultWrap" class="hidden" style="margin-top:12px">
+      <label class="fld">把 AI 的回答粘到这里</label>
+      <textarea id="modalResult" rows="8"></textarea>
+      <button class="primary" id="modalApply" style="margin-top:10px">应用结果</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var LS_KEY = 'pkb.v1';
+var state = {
+  entries: [],
+  profiles: [],
+  settings: { apiKey:'', baseUrl:'https://api.deepseek.com', model:'deepseek-v4-flash', styleSample:'', industry:'理财' }
+};
+var TYPES = { highlight:'划线摘录', essay:'随笔', idea:'灵感' };
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg){
+  var t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._tm); t._tm = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+}
+function todayStr(){ var d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function pad(n){ return n<10?'0'+n:''+n; }
+function nowISO(){ var d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds()); }
+function shortDate(iso){ return String(iso||'').replace('T',' ').slice(0,16); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function fp(s){
+  var t = String(s||'').replace(/\s+/g,'').toLowerCase();
+  var h = 5381;
+  for(var i=0;i<t.length;i++){ h = ((h<<5)+h+t.charCodeAt(i))>>>0; }
+  return h.toString(36)+'-'+t.length;
+}
+
+/* ---------- 存储 ---------- */
+var storageOK = true;
+function checkStorage(){
+  try{ localStorage.setItem('pkb.test','1'); localStorage.removeItem('pkb.test'); }
+  catch(e){ storageOK = false; }
+}
+function load(){
+  try{
+    var raw = localStorage.getItem(LS_KEY);
+    if(raw){
+      var d = JSON.parse(raw);
+      if(d && typeof d === 'object'){
+        if(Array.isArray(d.entries)) state.entries = d.entries;
+        if(Array.isArray(d.profiles)) state.profiles = d.profiles;
+        if(d.settings) for(var k in d.settings){ if(d.settings[k]!==undefined) state.settings[k]=d.settings[k]; }
+      }
+    }
+  }catch(e){ console.warn(e); }
+}
+var saveWarned = false;
+function save(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+  catch(e){
+    if(!saveWarned){ saveWarned = true; toast('本地存储写入失败，请尽快导出备份'); }
+  }
+}
+
+/* ---------- 入库 ---------- */
+function addEntries(list){
+  var seen = {};
+  state.entries.forEach(function(e){ seen[e.fingerprint] = 1; });
+  var added = 0, skipped = 0;
+  list.forEach(function(item){
+    var text = String(item.text||'').trim();
+    if(text.length < 4) return;
+    var f = fp(text);
+    if(seen[f]){ skipped++; return; }
+    seen[f] = 1;
+    state.entries.push({
+      id: uid(),
+      type: item.type || 'highlight',
+      source: item.source || 'manual',
+      book: item.book || '',
+      author: item.author || '',
+      category: item.category || '',
+      chapter: item.chapter || '',
+      text: text,
+      summary: '',
+      tags: [],
+      concepts: [],
+      kind: '',
+      created_at: item.created_at || nowISO(),
+      imported_at: nowISO(),
+      fingerprint: f,
+      status: 'raw',
+      links: []
+    });
+    added++;
+  });
+  if(added) save();
+  renderAll();
+  return { added: added, skipped: skipped };
+}
+
+/* ---------- 文本拆条 ---------- */
+function joinParts(parts){
+  var out = '';
+  for(var i=0;i<parts.length;i++){
+    var p = parts[i];
+    if(!out){ out = p; }
+    else if(/[。！？!?；;：:”』】》）)]$/.test(out)){ out += '\n' + p; }
+    else { out += p; }
+  }
+  return out.trim();
+}
+var numberedSub = /^(\d{1,3}[.．]\d{1,2})\s*(.+)$/;          // 5.1人为操纵：xxx（子编号，数字后直接接文字）
+var numberedTop = /^(\d{1,3})\s*[、.．)）:：]\s*(.+)$/;      // 1、xxx  1.xxx  1）xxx
+function matchNumber(line){
+  var m = line.match(numberedSub);
+  if(m) return m;
+  return line.match(numberedTop);
+}
+function isContentLine(line){
+  if(line.length >= 20) return true;
+  return /[。！？!?；;：:”』】》）)]$/.test(line);
+}
+function splitNotes(raw){
+  var text = String(raw||'').replace(/\r\n?/g,'\n').replace(/[\u200b\ufeff]/g,'');
+  var lines = text.split('\n').map(function(l){ return l.replace(/\s+$/,'').trim(); });
+  var numCount = 0, lineCount = 0;
+  lines.forEach(function(l){
+    if(!l) return;
+    lineCount++;
+    if(matchNumber(l)) numCount++;
+  });
+  var blocks = [], cur = null, i, m, leading = [];
+  if(numCount >= 2){
+    for(i=0;i<lines.length;i++){
+      var line = lines[i];
+      if(!line) continue;
+      m = matchNumber(line);
+      if(m){ if(cur) blocks.push(cur); cur = { no:m[1], parts:[m[2]] }; }
+      else if(cur){ cur.parts.push(line); }
+      else if(isContentLine(line)){ leading.push(line); }
+    }
+    if(cur) blocks.push(cur);
+  } else {
+    for(i=0;i<lines.length;i++){
+      if(lines[i]) blocks.push({ no:'', parts:[lines[i]] });
+    }
+  }
+  var out = [];
+  leading.forEach(function(l){ out.push({ text:l, chapter:'' }); });
+  blocks.forEach(function(b){
+    var t = joinParts(b.parts);
+    if(t.length >= 6) out.push({ text:t, chapter:b.no });
+  });
+  return out;
+}
+function bookFromFilename(name){
+  var base = String(name||'').replace(/\.[^.]+$/,'');
+  base = base.replace(/^\s*\d+\s*[、.．\-_]\s*/,'');
+  return base.trim();
+}
+
+/* ---------- AI ---------- */
+function aiReady(){
+  if(!state.settings.apiKey){ toast('请先在「设置」里填写 DeepSeek API Key'); return false; }
+  return true;
+}
+function callAI(system, user, temperature){
+  var base = (state.settings.baseUrl || 'https://api.deepseek.com').replace(/\/+$/,'');
+  return fetch(base + '/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'Authorization':'Bearer ' + state.settings.apiKey },
+    body: JSON.stringify({
+      model: state.settings.model || 'deepseek-v4-flash',
+      messages: [ { role:'system', content: system }, { role:'user', content: user } ],
+      temperature: (typeof temperature === 'number' ? temperature : 0.7),
+      stream: false
+    })
+  }).then(function(res){
+    if(!res.ok){
+      return res.text().then(function(t){ throw new Error('接口返回 ' + res.status + '：' + String(t).slice(0,200)); });
+    }
+    return res.json();
+  }).then(function(d){
+    var c = d && d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content;
+    if(!c) throw new Error('接口没有返回内容');
+    return c;
+  });
+}
+function aiErr(e){
+  var msg = String(e && e.message || e);
+  if(/Failed to fetch|NetworkError|Load failed/i.test(msg)){
+    return '无法连接 DeepSeek（可能是网络问题或浏览器跨域限制）。请改用「复制提示词（手动模式）」，效果一样。';
+  }
+  return 'AI 调用失败：' + msg;
+}
+function parseJSON(txt){
+  var s = String(txt||'').replace(/```json/gi,'```').replace(/```/g,'').trim();
+  var a = s.indexOf('{'), b = s.lastIndexOf('}');
+  if(a >= 0 && b > a) s = s.slice(a, b+1);
+  return JSON.parse(s);
+}
+
+var SYS_STRUCT = '你是个人知识库的结构化助手。只输出一个 JSON 对象，不要解释、不要代码块标记。';
+function structPrompt(entry){
+  return '请对下面这条读书笔记做结构化处理，输出 JSON：\n'
+    + '{"summary":"一句话摘要，不超过40字","tags":["主题标签，2-4个，每个2-6字"],"concepts":["关键概念，1-3个"],"kind":"事实|观点|方法|金句|案例"}\n\n'
+    + '所属书目：' + (entry.book || '未注明') + '\n'
+    + '笔记原文：\n' + entry.text;
+}
+function applyStruct(entry, obj){
+  if(obj && typeof obj === 'object'){
+    entry.summary = String(obj.summary || '').slice(0,60);
+    entry.tags = Array.isArray(obj.tags) ? obj.tags.slice(0,5).map(String) : [];
+    entry.concepts = Array.isArray(obj.concepts) ? obj.concepts.slice(0,4).map(String) : [];
+    entry.kind = String(obj.kind || '');
+    entry.status = 'structured';
+  }
+}
+
+/* ---------- 画像统计 ---------- */
+var STOP = ('的 了 是 我 你 他 她 它 这 那 不 在 有 也 就 和 与 而 但 等 一个 我们 你们 他们 自己 可以 没有 因为 所以 如果 就是 什么 这个 那个 还是 已经 对于 以及 但是 比如 其实 东西 时候 问题 事情 只是 不是 而是 很多 非常 真正 需要 可能 应该 一定 一直 越来越 然后 现在 过去 未来 大家 别人 人生 世界 生活 时间 一个 这些 那些 这样 那样 怎么 为什么 如何 只能 只有 还要 不能 不会 能够 起来 出来 进去 一下 一些 这里 那里 上面 下面 里面 外面 之后 之前 以后 以前 于是 因此 当然 究竟 到底 好像 似乎 其实 反正 至少 甚至 特别是 尤其 例如 包括 通过 关于 由于 虽然 尽管 无论 不管 只要 除非 并且 或者 同时 另外 此外 总之 一 二 三').split(' ');
+function isStop(w){ return STOP.indexOf(w) >= 0; }
+function extractConcepts(texts, limit){
+  var freq = {}, i, j, t, w;
+  for(i=0;i<texts.length;i++){
+    t = String(texts[i]||'').replace(/[^\u4e00-\u9fa5]/g,' ').replace(/\s+/g,'');
+    var seenLocal = {};
+    for(j=0;j<t.length-1;j++){
+      w = t.substr(j,2);
+      if(w.length===2 && !isStop(w) && !seenLocal[w]){ seenLocal[w]=1; freq[w]=(freq[w]||0)+1; }
+    }
+    for(j=0;j<t.length-3;j++){
+      w = t.substr(j,3);
+      if(w.length===3 && !isStop(w) && !seenLocal[w]){ seenLocal[w]=1; freq[w]=(freq[w]||0)+1; }
+    }
+  }
+  var arr = [];
+  for(var k in freq){
+    if(freq[k] >= 2 || texts.length < 10) arr.push({ w:k, n:freq[k] });
+  }
+  arr.sort(function(a,b){ return b.n - a.n || b.w.length - a.w.length; });
+  var picked = [], used = [];
+  for(i=0;i<arr.length && picked.length < (limit||12); i++){
+    var dup = false;
+    for(j=0;j<used.length;j++){
+      if(used[j].indexOf(arr[i].w) >= 0 || arr[i].w.indexOf(used[j]) >= 0){ dup = true; break; }
+    }
+    if(!dup){ picked.push(arr[i]); used.push(arr[i].w); }
+  }
+  return picked;
+}
+function tagFreq(){
+  var f = {};
+  state.entries.forEach(function(e){
+    (e.tags||[]).forEach(function(t){ f[t] = (f[t]||0) + 1; });
+  });
+  var arr = []; for(var k in f) arr.push({ w:k, n:f[k] });
+  arr.sort(function(a,b){ return b.n - a.n; });
+  return arr;
+}
+function bookFreq(){
+  var f = {};
+  state.entries.forEach(function(e){ var b = e.book || '未注明'; f[b] = (f[b]||0)+1; });
+  var arr = []; for(var k in f) arr.push({ w:k, n:f[k] });
+  arr.sort(function(a,b){ return b.n - a.n; });
+  return arr;
+}
+function recentEssays(n){
+  return state.entries.filter(function(e){
+    return (e.type === 'essay' || e.type === 'idea') && e.source !== 'generated' && e.text.length > 20;
+  })
+    .sort(function(a,b){ return String(b.imported_at).localeCompare(String(a.imported_at)); }).slice(0, n||6);
+}
+function latestProfile(){
+  if(!state.profiles.length) return null;
+  return state.profiles.slice().sort(function(a,b){ return String(b.saved_at).localeCompare(String(a.saved_at)); })[0];
+}
+function profileText(){
+  var p = latestProfile();
+  return p ? p.content : '';
+}
+
+/* ---------- 素材检索 ---------- */
+function searchMaterials(topic, limit){
+  var kws = String(topic||'').split(/[\s,，、;；]+/).filter(function(s){ return s.length >= 2; });
+  var scored = state.entries.filter(function(e){ return e.status !== 'raw' || e.type !== 'highlight'; });
+  if(!scored.length) scored = state.entries.slice();
+  var res = scored.map(function(e){
+    var hay = (e.text + ' ' + e.book + ' ' + (e.tags||[]).join(' ') + ' ' + (e.concepts||[]).join(' ') + ' ' + (e.summary||'')).toLowerCase();
+    var score = 0;
+    kws.forEach(function(k){ if(hay.indexOf(k.toLowerCase()) >= 0) score += 3; });
+    if(e.status === 'structured') score += 0.5;
+    score += Math.min(e.text.length, 300) / 600;
+    return { e:e, score:score };
+  });
+  if(kws.length){
+    res = res.filter(function(r){ return r.score > 0.6; });
+  }
+  res.sort(function(a,b){ return b.score - a.score; });
+  var out = res.slice(0, limit || 10).map(function(r){ return r.e; });
+  if(!out.length){
+    out = state.entries.slice().sort(function(a,b){ return String(b.imported_at).localeCompare(String(a.imported_at)); }).slice(0, limit||10);
+  }
+  return out;
+}
+function materialBlock(list){
+  return list.map(function(e, i){
+    return '【素材' + (i+1) + '】' + (e.book ? '《' + e.book + '》 ' : '') + (e.tags&&e.tags.length ? '[' + e.tags.join('/') + '] ' : '') + '\n' + e.text;
+  }).join('\n\n');
+}
+function styleBlock(){
+  var parts = [];
+  if(state.settings.styleSample) parts.push(state.settings.styleSample);
+  recentEssays(4).forEach(function(e){ parts.push(e.text); });
+  return parts.join('\n---\n').slice(0, 2200);
+}
+function profileBlock(){
+  var p = profileText();
+  if(p) return p.slice(0, 2500);
+  var tags = tagFreq().slice(0,10).map(function(t){ return t.w; });
+  var books = bookFreq().slice(0,8).map(function(b){ return b.w; });
+  return '（尚未生成画像）关注标签：' + tags.join('、') + '；涉及书目：' + books.join('、') + '。';
+}
+
+/* ================= 渲染 ================= */
+function renderTop(){
+  $('kpiToday').textContent = state.entries.filter(function(e){ return String(e.imported_at).slice(0,10) === todayStr(); }).length;
+  $('kpiTotal').textContent = state.entries.length;
+  $('kpiStruct').textContent = state.entries.filter(function(e){ return e.status === 'structured'; }).length;
+}
+function renderCollect(){
+  var today = state.entries.filter(function(e){ return String(e.imported_at).slice(0,10) === todayStr(); }).length;
+  var n = $('todayNotice');
+  var storageWarn = storageOK ? '' : '<div class="notice err"><b>注意：这个浏览器不允许本地存储，数据关掉页面就会丢。</b><br>请改用 Chrome 或 Edge 打开这个文件，或者每次用完点「设置 · 帮助」→「导出备份 JSON」保存一份。</div>';
+  if(today > 0){
+    n.innerHTML = storageWarn + '<div class="notice ok">今天已经记录 <b>' + today + '</b> 条，很好。坚持每天 2 分钟，知识库会自己长大。</div>';
+  } else {
+    n.innerHTML = storageWarn + '<div class="notice warn">今天还没有记录。写下一条今天的想法，或者把新的划线粘贴进来 —— 这是让「永不遗忘的自己」运转起来的唯一动作。</div>';
+  }
+}
+function entryCard(e, opts){
+  opts = opts || {};
+  var typeLabel = TYPES[e.type] || e.type;
+  var html = '<div class="entry" data-id="' + e.id + '">';
+  html += '<div class="meta">';
+  html += '<span class="pill ' + (e.type==='essay'?'blue':(e.type==='idea'?'purple':'teal')) + '">' + esc(typeLabel) + '</span>';
+  if(e.book) html += '<span class="pill gray">' + esc(e.book) + '</span>';
+  if(e.category) html += '<span class="pill gray">' + esc(e.category) + '</span>';
+  if(e.chapter) html += '<span class="pill gray">编号 ' + esc(e.chapter) + '</span>';
+  if(e.kind) html += '<span class="pill amber">' + esc(e.kind) + '</span>';
+  html += '<span>' + shortDate(e.imported_at) + '</span>';
+  if(e.status !== 'structured' && e.type === 'highlight') html += '<span style="color:#b45309">未结构化</span>';
+  html += '</div>';
+  if(e.summary) html += '<div class="sum">' + esc(e.summary) + '</div>';
+  html += '<div class="txt" data-role="text">' + esc(e.text) + '</div>';
+  if((e.tags&&e.tags.length) || (e.concepts&&e.concepts.length)){
+    html += '<div style="margin-top:8px">';
+    (e.tags||[]).forEach(function(t){ html += '<span class="tag">' + esc(t) + '</span>'; });
+    (e.concepts||[]).forEach(function(t){ html += '<span class="tag" style="border-style:dashed">' + esc(t) + '</span>'; });
+    html += '</div>';
+  }
+  html += '<div class="acts">';
+  if(opts.review){
+    html += '<span style="font-size:12px;color:#a8a29e">重温一下你以前的想法</span>';
+  } else {
+    if(e.status !== 'structured') html += '<button class="mini" data-act="struct">AI 结构化</button>';
+    else html += '<button class="mini" data-act="struct">重新结构化</button>';
+    html += '<button class="mini" data-act="struct-manual" title="没填 API Key 也能用：复制提示词到 DeepSeek 网页版">手动</button>';
+    html += '<button class="mini" data-act="edit">编辑</button>';
+    html += '<button class="mini" data-act="tag">加标签</button>';
+    html += '<button class="mini" data-act="topic">用作选题</button>';
+    html += '<button class="mini danger" data-act="del">删除</button>';
+  }
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+function renderLibrary(){
+  var q = ($('libSearch').value || '').trim().toLowerCase();
+  var src = $('libSource').value;
+  var cat = $('libCategory').value;
+  var cats = {};
+  state.entries.forEach(function(e){ if(e.category) cats[e.category] = 1; });
+  var sel = $('libCategory');
+  var curCat = sel.value;
+  sel.innerHTML = '<option value="">全部分类</option>' + Object.keys(cats).map(function(c){ return '<option value="' + esc(c) + '">' + esc(c) + '</option>'; }).join('');
+  sel.value = curCat;
+
+  var list = state.entries.slice().sort(function(a,b){ return String(b.imported_at).localeCompare(String(a.imported_at)); });
+  if(q) list = list.filter(function(e){ return (e.text + ' ' + e.book + ' ' + (e.tags||[]).join(' ') + ' ' + (e.concepts||[]).join(' ') + ' ' + (e.summary||'')).toLowerCase().indexOf(q) >= 0; });
+  if(src) list = list.filter(function(e){ return e.source === src; });
+  if(cat) list = list.filter(function(e){ return e.category === cat; });
+
+  var structured = state.entries.filter(function(e){ return e.status === 'structured'; }).length;
+  var tags = tagFreq().length;
+  $('libStats').innerHTML =
+    '<div class="stat"><b>' + state.entries.length + '</b><span>库内笔记总数</span></div>' +
+    '<div class="stat"><b>' + structured + '</b><span>已结构化</span></div>' +
+    '<div class="stat"><b>' + tags + '</b><span>主题标签</span></div>' +
+    '<div class="stat"><b>' + bookFreq().filter(function(b){ return b.w !== '未注明'; }).length + '</b><span>涉及书目</span></div>';
+
+  if(!list.length){
+    $('libList').innerHTML = '<div class="card" style="text-align:center;color:#a8a29e">没有匹配的笔记。先去「① 采集」导入一些吧。</div>';
+    return;
+  }
+  var html = '<div style="font-size:12.5px;color:#78716c;margin:0 0 10px">显示 ' + list.length + ' 条</div>';
+  list.slice(0, 200).forEach(function(e){ html += entryCard(e); });
+  if(list.length > 200) html += '<div class="card" style="text-align:center;color:#a8a29e">只显示最近 200 条，用搜索框缩小范围</div>';
+  $('libList').innerHTML = html;
+}
+function renderReview(){
+  var box = $('reviewBox');
+  if(!box._data){ box.innerHTML = ''; return; }
+  var html = '<div class="card"><h3>随机回顾</h3><p class="hint">这些是你以前记下、可能已经忘了的想法。看看有没有新的感觉。</p>';
+  box._data.forEach(function(e){ html += entryCard(e, { review:true }); });
+  html += '</div>';
+  box.innerHTML = html;
+}
+function renderProfile(){
+  var total = state.entries.length;
+  var structured = state.entries.filter(function(e){ return e.status === 'structured'; }).length;
+  var essays = state.entries.filter(function(e){ return e.type === 'essay' || e.type === 'idea'; }).length;
+  var books = bookFreq().filter(function(b){ return b.w !== '未注明'; });
+  var html = '';
+  html += '<div class="statrow">'
+    + '<div class="stat"><b>' + total + '</b><span>笔记总数</span></div>'
+    + '<div class="stat"><b>' + books.length + '</b><span>涉及书目</span></div>'
+    + '<div class="stat"><b>' + essays + '</b><span>自己的随笔/灵感</span></div>'
+    + '<div class="stat"><b>' + structured + '</b><span>已结构化</span></div>'
+    + '</div>';
+
+  var tags = tagFreq().slice(0,10);
+  var concepts = extractConcepts(state.entries.map(function(e){ return e.text; }), 10);
+  var maxT = tags.length ? tags[0].n : 1;
+  var maxC = concepts.length ? concepts[0].n : 1;
+
+  html += '<div class="grid2">';
+  html += '<div><h4 style="font-size:13px;margin-bottom:8px">最常出现的主题标签</h4>';
+  if(!tags.length) html += '<p class="hint">还没有标签，去「② 知识库」点「AI 批量结构化」。</p>';
+  tags.forEach(function(t){
+    html += '<div class="barrow"><span class="lbl">' + esc(t.w) + '</span><span class="bar"><i style="width:' + Math.round(t.n/maxT*100) + '%"></i></span><span class="num">' + t.n + '</span></div>';
+  });
+  html += '</div>';
+  html += '<div><h4 style="font-size:13px;margin-bottom:8px">高频概念（本地统计）</h4>';
+  if(!concepts.length) html += '<p class="hint">还没有足够内容。</p>';
+  concepts.forEach(function(t){
+    html += '<div class="barrow"><span class="lbl">' + esc(t.w) + '</span><span class="bar"><i style="width:' + Math.round(t.n/maxC*100) + '%;background:#6d28d9"></i></span><span class="num">' + t.n + '</span></div>';
+  });
+  html += '</div></div>';
+
+  html += '<h4 style="font-size:13px;margin:18px 0 8px">书目分布</h4>';
+  var maxB = books.length ? books[0].n : 1;
+  books.slice(0,10).forEach(function(b){
+    html += '<div class="barrow"><span class="lbl">' + esc(b.w) + '</span><span class="bar"><i style="width:' + Math.round(b.n/maxB*100) + '%;background:#1d4ed8"></i></span><span class="num">' + b.n + '</span></div>';
+  });
+  $('profileStats').innerHTML = html;
+
+  var hist = state.profiles.slice().sort(function(a,b){ return String(b.saved_at).localeCompare(String(a.saved_at)); });
+  if(!hist.length){
+    $('profileHistory').innerHTML = '<p class="hint">还没有画像版本。先在上面点「AI 直接生成」。</p>';
+  } else {
+    $('profileHistory').innerHTML = hist.map(function(p){
+      return '<div class="entry"><div class="meta"><span class="pill purple">画像版本</span><span>' + shortDate(p.saved_at) + '</span><span>基于 ' + p.entryCount + ' 条笔记</span></div>'
+        + '<div class="txt" style="max-height:220px;overflow:auto">' + esc(p.content) + '</div>'
+        + '<div class="acts"><button class="mini" data-profile="copy" data-pid="' + p.id + '">复制</button>'
+        + '<button class="mini" data-profile="use" data-pid="' + p.id + '">载入编辑</button>'
+        + '<button class="mini danger" data-profile="del" data-pid="' + p.id + '">删除</button></div></div>';
+    }).join('');
+  }
+}
+function renderGenMaterials(list){
+  var box = $('genMaterials');
+  if(!list || !list.length){ box.innerHTML = '没有找到素材，先去「② 知识库」导入并结构化一些笔记。'; return; }
+  box._items = list;
+  box.innerHTML = list.map(function(e, i){
+    return '<label class="chk"><input type="checkbox" data-mi="' + i + '" checked><span class="ct">'
+      + '<span class="cm">' + esc(e.book || '未注明') + ' · ' + esc(TYPES[e.type]||e.type) + ' · ' + shortDate(e.imported_at) + '</span><br>'
+      + esc(e.text.slice(0, 160)) + (e.text.length > 160 ? '…' : '')
+      + '</span></label>';
+  }).join('');
+}
+function selectedMaterials(){
+  var box = $('genMaterials');
+  if(!box._items) return [];
+  var out = [];
+  box.querySelectorAll('input[data-mi]').forEach(function(cb){
+    if(cb.checked) out.push(box._items[parseInt(cb.getAttribute('data-mi'), 10)]);
+  });
+  return out;
+}
+function renderSettings(){
+  $('setKey').value = state.settings.apiKey || '';
+  $('setBase').value = state.settings.baseUrl || 'https://api.deepseek.com';
+  $('setModel').value = state.settings.model || 'deepseek-v4-flash';
+  $('styleBox').value = state.settings.styleSample || '';
+  var size = 0;
+  try{ size = (localStorage.getItem(LS_KEY) || '').length; }catch(e){}
+  $('dataInfo').innerHTML = '<span class="hint">当前库内 ' + state.entries.length + ' 条笔记 · ' + state.profiles.length + ' 个画像版本 · 占用约 ' + (size/1024).toFixed(1) + ' KB</span>';
+}
+function renderAll(){
+  renderTop(); renderCollect(); renderLibrary(); renderProfile(); renderSettings();
+}
+
+/* ================= 提示词弹窗（手动模式） ================= */
+var modalApplyCb = null;
+function openPromptModal(title, prompt, onApply, needResult){
+  $('modalTitle').textContent = title;
+  $('modalPrompt').value = prompt;
+  $('modalResult').value = '';
+  modalApplyCb = onApply || null;
+  $('modalResultWrap').className = (onApply && needResult !== false) ? '' : 'hidden';
+  $('modalBg').classList.add('show');
+}
+$('modalClose').onclick = function(){ $('modalBg').classList.remove('show'); };
+$('modalBg').onclick = function(ev){ if(ev.target === $('modalBg')) $('modalBg').classList.remove('show'); };
+$('modalCopy').onclick = function(){
+  copyText($('modalPrompt').value);
+};
+$('modalApply').onclick = function(){
+  var v = $('modalResult').value;
+  if(!v.trim()){ toast('请先把 AI 的回答粘进来'); return; }
+  if(modalApplyCb){ modalApplyCb(v); }
+  $('modalBg').classList.remove('show');
+};
+function copyText(t){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){ toast('已复制到剪贴板'); }, function(){ fallbackCopy(t); });
+  } else { fallbackCopy(t); }
+}
+function fallbackCopy(t){
+  var ta = document.createElement('textarea');
+  ta.value = t; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); toast('已复制到剪贴板'); }catch(e){ toast('复制失败，请手动选中复制'); }
+  document.body.removeChild(ta);
+}
+
+/* ================= 事件 ================= */
+document.querySelectorAll('.tab').forEach(function(b){
+  b.onclick = function(){
+    document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('active'); });
+    document.querySelectorAll('.view').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    $('view-' + b.getAttribute('data-view')).classList.add('active');
+    renderAll();
+  };
+});
+
+/* 采集：随手记 */
+$('btnQuickSave').onclick = function(){
+  var v = $('quickText').value;
+  if(!v.trim()){ toast('还没写内容'); return; }
+  var parts = v.split(/\n\s*\n/).map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+  var list = parts.map(function(p){ return { text:p, type:$('quickType').value, source:'manual' }; });
+  var r = addEntries(list);
+  $('quickText').value = '';
+  toast('已保存 ' + r.added + ' 条' + (r.skipped ? '（跳过重复 ' + r.skipped + ' 条）' : ''));
+};
+$('quickText').addEventListener('keydown', function(ev){
+  if((ev.ctrlKey || ev.metaKey) && ev.key === 'Enter'){ ev.preventDefault(); $('btnQuickSave').click(); }
+});
+
+/* 采集：docx */
+var dropZone = $('dropZone'), fileInput = $('fileInput');
+dropZone.onclick = function(){ fileInput.click(); };
+dropZone.addEventListener('dragover', function(ev){ ev.preventDefault(); dropZone.classList.add('over'); });
+dropZone.addEventListener('dragleave', function(){ dropZone.classList.remove('over'); });
+dropZone.addEventListener('drop', function(ev){
+  ev.preventDefault(); dropZone.classList.remove('over');
+  handleDocx(ev.dataTransfer.files);
+});
+fileInput.onchange = function(){ handleDocx(fileInput.files); fileInput.value = ''; };
+
+function loadMammoth(){
+  return new Promise(function(resolve, reject){
+    if(window.mammoth) return resolve();
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js';
+    s.onload = function(){ resolve(); };
+    s.onerror = function(){ reject(new Error('无法加载 docx 解析库，请检查网络，或改用「粘贴导入」')); };
+    document.head.appendChild(s);
+  });
+}
+function readFile(file){
+  return new Promise(function(resolve, reject){
+    var fr = new FileReader();
+    fr.onload = function(){ resolve(fr.result); };
+    fr.onerror = function(){ reject(new Error('读取文件失败')); };
+    fr.readAsArrayBuffer(file);
+  });
+}
+function handleDocx(files){
+  var list = Array.prototype.slice.call(files || []);
+  if(!list.length) return;
+  var box = $('docxPreview');
+  box.innerHTML = '<div class="notice info"><span class="spin"></span>正在解析 ' + list.length + ' 个文件…</div>';
+  loadMammoth().then(function(){
+    var jobs = list.map(function(f){
+      return readFile(f).then(function(buf){
+        return window.mammoth.extractRawText({ arrayBuffer: buf }).then(function(r){
+          var book = bookFromFilename(f.name);
+          var bookKey = book.replace(/\s+/g,'');
+          var items = splitNotes(r.value).filter(function(it){
+            var t = it.text.replace(/\s+/g,'');
+            if(t === bookKey) return false;
+            if(t.length <= 40 && bookKey.indexOf(t) === 0) return false;
+            return true;
+          });
+          var cat = (f.webkitRelativePath && f.webkitRelativePath.indexOf('/') > 0) ? f.webkitRelativePath.split('/')[0] : '';
+          return { file:f.name, book:book, category:cat, items:items };
+        });
+      });
+    });
+    return Promise.all(jobs);
+  }).then(function(results){
+    var total = results.reduce(function(a, r){ return a + r.items.length; }, 0);
+    var html = '<div class="notice ok">解析完成：共 ' + results.length + ' 个文件，识别出 <b>' + total + '</b> 条笔记。确认无误后点下面的按钮入库。</div>';
+    html += '<div style="max-height:300px;overflow:auto">';
+    results.forEach(function(r){
+      html += '<div style="border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px">';
+      html += '<div class="row" style="justify-content:space-between"><b>' + esc(r.file) + '</b><span class="pill teal">' + r.items.length + ' 条</span></div>';
+      html += '<div class="row" style="margin-top:8px">'
+        + '<input type="text" value="' + esc(r.book) + '" data-book="' + esc(r.file) + '" placeholder="书名" style="max-width:240px">'
+        + '<input type="text" value="' + esc(r.category) + '" data-cat="' + esc(r.file) + '" placeholder="分类（如 理财）" style="max-width:160px">'
+        + '</div>';
+      html += '<div style="margin-top:8px;font-size:12.5px;color:#78716c">';
+      r.items.slice(0,3).forEach(function(it){ html += '· ' + esc(it.text.slice(0,80)) + '<br>'; });
+      if(r.items.length > 3) html += '· …还有 ' + (r.items.length - 3) + ' 条';
+      html += '</div></div>';
+    });
+    html += '</div>';
+    html += '<button class="primary" id="btnDocxConfirm">确认入库</button>';
+    box.innerHTML = html;
+    $('btnDocxConfirm').onclick = function(){
+      var all = [];
+      box.querySelectorAll('[data-book]').forEach(function(inp){
+        var fn = inp.getAttribute('data-book');
+        var res = results.filter(function(r){ return r.file === fn; })[0];
+        if(!res) return;
+        var catInp = box.querySelector('[data-cat="' + fn.replace(/"/g,'\\"') + '"]');
+        var book = inp.value.trim() || res.book;
+        var cat = catInp ? catInp.value.trim() : res.category;
+        res.items.forEach(function(it){
+          all.push({ text: it.text, chapter: it.chapter, book: book, category: cat, type:'highlight', source:'weread_docx' });
+        });
+      });
+      var r = addEntries(all);
+      box.innerHTML = '<div class="notice ok">入库完成：新增 <b>' + r.added + '</b> 条，跳过重复 ' + r.skipped + ' 条。</div>';
+      toast('入库完成，新增 ' + r.added + ' 条');
+    };
+  }).catch(function(e){
+    box.innerHTML = '<div class="notice err">' + esc(e.message || e) + '</div>';
+  });
+}
+
+/* 采集：粘贴 */
+$('btnPastePreview').onclick = function(){
+  var raw = $('pasteText').value;
+  if(!raw.trim()){ toast('请先粘贴内容'); return; }
+  var book = $('pasteBook').value.trim();
+  var cat = $('pasteCategory').value.trim();
+  var items = splitNotes(raw);
+  if(!items.length){ $('pastePreview').innerHTML = '<div class="notice warn">没识别出内容，检查一下粘贴的文字。</div>'; return; }
+  var html = '<div class="notice ok">识别出 <b>' + items.length + '</b> 条笔记：</div><div style="max-height:280px;overflow:auto">';
+  items.forEach(function(it, i){
+    html += '<div class="entry"><div class="meta"><span class="pill teal">第 ' + (i+1) + ' 条</span>' + (it.chapter ? '<span class="pill gray">编号 ' + esc(it.chapter) + '</span>' : '') + '</div><div class="txt">' + esc(it.text) + '</div></div>';
+  });
+  html += '</div><button class="primary" id="btnPasteConfirm">确认入库</button>';
+  $('pastePreview').innerHTML = html;
+  $('btnPasteConfirm').onclick = function(){
+    var list = items.map(function(it){ return { text:it.text, chapter:it.chapter, book:book, category:cat, type:'highlight', source:'paste' }; });
+    var r = addEntries(list);
+    $('pasteText').value = '';
+    $('pastePreview').innerHTML = '<div class="notice ok">入库完成：新增 <b>' + r.added + '</b> 条，跳过重复 ' + r.skipped + ' 条。</div>';
+  };
+};
+
+/* 知识库：筛选 */
+['libSource','libCategory'].forEach(function(id){
+  $(id).addEventListener('change', function(){ renderLibrary(); });
+});
+$('libSearch').addEventListener('input', function(){ renderLibrary(); });
+
+/* 知识库：回顾 */
+$('btnReview').onclick = function(){
+  var pool = state.entries.filter(function(e){
+    var d = String(e.imported_at).slice(0,10);
+    return d < todayStr() && e.text.length > 30;
+  });
+  if(!pool.length){ toast('还没有可以回顾的旧笔记'); return; }
+  var picked = [];
+  for(var i=0;i<3 && pool.length;i++){
+    var idx = Math.floor(Math.random()*pool.length);
+    picked.push(pool.splice(idx,1)[0]);
+  }
+  $('reviewBox')._data = picked;
+  renderReview();
+  $('reviewBox').scrollIntoView({ behavior:'smooth', block:'start' });
+};
+
+/* 知识库：卡片操作 */
+$('libList').addEventListener('click', function(ev){
+  var btn = ev.target.closest ? ev.target.closest('button[data-act]') : null;
+  if(!btn) return;
+  var card = btn.closest('.entry');
+  var id = card.getAttribute('data-id');
+  var entry = state.entries.filter(function(e){ return e.id === id; })[0];
+  if(!entry) return;
+  var act = btn.getAttribute('data-act');
+
+  if(act === 'del'){
+    if(!confirm('确定删除这条笔记？删除后无法恢复。')) return;
+    state.entries = state.entries.filter(function(e){ return e.id !== id; });
+    save(); renderAll(); toast('已删除');
+  } else if(act === 'edit'){
+    var txtEl = card.querySelector('[data-role="text"]');
+    var cur = entry.text;
+    txtEl.innerHTML = '<textarea rows="5" style="width:100%">' + esc(cur) + '</textarea>'
+      + '<div class="row" style="margin-top:8px"><button class="mini primary" data-save="1">保存</button><button class="mini" data-cancel="1">取消</button></div>';
+    card.querySelector('[data-save]').onclick = function(){
+      var v = txtEl.querySelector('textarea').value.trim();
+      if(v) entry.text = v;
+      entry.fingerprint = fp(entry.text);
+      save(); renderAll(); toast('已保存');
+    };
+    card.querySelector('[data-cancel]').onclick = function(){ renderLibrary(); };
+  } else if(act === 'tag'){
+    var t = prompt('输入标签（多个用逗号分隔）：');
+    if(!t) return;
+    t.split(/[,，、\s]+/).filter(function(s){ return s; }).forEach(function(s){
+      if((entry.tags||[]).indexOf(s) < 0) entry.tags.push(s);
+    });
+    save(); renderAll();
+  } else if(act === 'topic'){
+    document.querySelector('.tab[data-view="generate"]').click();
+    $('genTopic').value = entry.text.slice(0, 30).replace(/\n/g,'');
+    toast('已填入选题框');
+  } else if(act === 'struct'){
+    if(!aiReady()) return;
+    btn.textContent = '处理中…'; btn.disabled = true;
+    callAI(SYS_STRUCT, structPrompt(entry), 0.2).then(function(out){
+      applyStruct(entry, parseJSON(out));
+      save(); renderAll(); toast('结构化完成');
+    }).catch(function(e){
+      btn.textContent = 'AI 结构化'; btn.disabled = false;
+      alert(aiErr(e) + '\n\n改用这条笔记上的「手动」按钮：把提示词复制到 DeepSeek 网页版，再把它的回答粘回来，效果一样。');
+    });
+  } else if(act === 'struct-manual'){
+    openPromptModal('结构化提示词（手动模式）', structPrompt(entry), function(result){
+      try{
+        applyStruct(entry, parseJSON(result));
+        save(); renderAll(); toast('结构化完成');
+      }catch(err){
+        alert('解析失败：AI 的回答不是标准 JSON。\n\n请确认复制的是它输出的整段 { ... } 内容（带 ```json 代码块标记也没关系，工具会自动去掉）。');
+      }
+    });
+  }
+});
+
+/* 知识库：批量结构化 */
+$('btnStructBatch').onclick = function(){
+  if(!aiReady()) return;
+  var todo = state.entries.filter(function(e){ return e.status !== 'structured' && e.text.length > 10; });
+  if(!todo.length){ toast('全部都已经结构化过了'); return; }
+  var batch = todo.slice(0, 20);
+  var btn = $('btnStructBatch'); btn.disabled = true;
+  var status = $('structStatus');
+  var i = 0, ok = 0, fail = 0;
+  function next(){
+    if(i >= batch.length){
+      btn.disabled = false;
+      btn.textContent = 'AI 批量结构化（未处理的）';
+      save(); renderAll();
+      status.innerHTML = '本轮完成：成功 ' + ok + ' 条，失败 ' + fail + ' 条。还有 ' + Math.max(0, todo.length - batch.length) + ' 条未处理，可以再点一次。';
+      toast('本轮完成：成功 ' + ok + ' 条');
+      return;
+    }
+    var e = batch[i];
+    status.innerHTML = '<span class="spin"></span>正在处理第 ' + (i+1) + ' / ' + batch.length + ' 条…';
+    callAI(SYS_STRUCT, structPrompt(e), 0.2).then(function(out){
+      try{ applyStruct(e, parseJSON(out)); ok++; }catch(err){ fail++; }
+      i++; setTimeout(next, 200);
+    }).catch(function(err){
+      fail++; i++;
+      if(fail >= 3 && ok === 0){
+        btn.disabled = false;
+        btn.textContent = 'AI 批量结构化（未处理的）';
+        status.innerHTML = '<span style="color:#b91c1c">' + esc(aiErr(err)) + '</span>';
+        return;
+      }
+      setTimeout(next, 400);
+    });
+  }
+  next();
+};
+
+/* 知识库：批量结构化（手动模式） */
+function parseJSONArray(txt){
+  var s = String(txt||'').replace(/```json/gi,'```').replace(/```/g,'').trim();
+  var a = s.indexOf('['), b = s.lastIndexOf(']');
+  if(a >= 0 && b > a) s = s.slice(a, b+1);
+  return JSON.parse(s);
+}
+function structTodoList(){
+  return state.entries.filter(function(e){ return e.status !== 'structured' && e.text.length > 10; });
+}
+$('btnStructCopy').onclick = function(){
+  var todo = structTodoList();
+  if(!todo.length){ toast('全部都已经结构化过了'); return; }
+  var batch = todo.slice(0, 10);
+  var lines = batch.map(function(e, i){
+    return '【' + (i+1) + '】' + (e.book ? '《' + e.book + '》 ' : '') + e.text.replace(/\n/g,' ').slice(0, 240);
+  }).join('\n');
+  var prompt = '请对下面 ' + batch.length + ' 条读书笔记逐条做结构化处理。\n\n'
+    + '只输出一个 JSON 数组，不要解释、不要代码块标记。每一项对应一条笔记，格式：\n'
+    + '[{"n":1,"summary":"一句话摘要，不超过40字","tags":["主题标签2-4个，每个2-6字"],"concepts":["关键概念1-3个"],"kind":"事实|观点|方法|金句|案例"}]\n'
+    + '其中 n 就是笔记前面的【序号】，必须一一对应，不要漏也不要多。\n\n'
+    + '笔记列表：\n' + lines;
+  openPromptModal('批量结构化提示词（本次 ' + batch.length + ' 条）', prompt, function(result){
+    var arr = null;
+    try{
+      arr = parseJSONArray(result);
+      if(!arr || !arr.length) throw new Error('empty');
+    }catch(err){
+      alert('解析失败：AI 的回答不是标准 JSON 数组。\n\n请把它输出的整段 [ ... ] 完整复制过来再试。');
+      return;
+    }
+    var map = {};
+    arr.forEach(function(o){
+      var n = parseInt(o && (o.n != null ? o.n : o.index), 10);
+      if(n >= 1 && n <= batch.length) map[n] = o;
+    });
+    var ok = 0;
+    batch.forEach(function(e, i){
+      var o = map[i + 1];
+      if(o){ applyStruct(e, o); ok++; }
+    });
+    save(); renderAll();
+    if(ok === 0){
+      alert('没有匹配上任何一条。请确认 AI 输出的 JSON 里每一项都带 "n" 序号。');
+    } else {
+      toast('已回填 ' + ok + ' / ' + batch.length + ' 条');
+      if(ok < batch.length) $('structStatus').innerHTML = '手动模式已处理 ' + ok + ' 条，还剩 ' + structTodoList().length + ' 条未结构化，再点一次「批量提示词（手动模式）」即可。';
+    }
+  });
+};
+
+/* 画像 */
+$('btnStyleFromEssays').onclick = function(){
+  var list = recentEssays(6);
+  if(!list.length){ toast('还没有随笔，先去「① 采集」随手记几条'); return; }
+  $('styleBox').value = list.map(function(e){ return e.text; }).join('\n---\n');
+};
+$('btnStyleSave').onclick = function(){
+  state.settings.styleSample = $('styleBox').value;
+  save(); toast('文风样本已保存');
+};
+function buildProfilePrompt(){
+  var samples = state.entries.slice()
+    .sort(function(a,b){ return String(b.imported_at).localeCompare(String(a.imported_at)); })
+    .filter(function(e){ return e.text.length > 15; })
+    .slice(0, 60);
+  var stats = '笔记总数：' + state.entries.length + '\n'
+    + '涉及书目：' + bookFreq().slice(0,12).map(function(b){ return b.w + '(' + b.n + ')'; }).join('、') + '\n'
+    + '主题标签：' + tagFreq().slice(0,15).map(function(t){ return t.w + '(' + t.n + ')'; }).join('、') + '\n'
+    + '自己的随笔数量：' + state.entries.filter(function(e){ return e.type==='essay'||e.type==='idea'; }).length;
+  var body = samples.map(function(e, i){ return (i+1) + '. ' + (e.book ? '《' + e.book + '》' : '') + e.text.replace(/\n/g,' '); }).join('\n');
+  return '下面是一个人的读书笔记与随笔数据。请归纳出他的个人画像，用于后续用「像他本人」的口吻写公众号文章。\n\n'
+    + '【统计数据】\n' + stats + '\n\n'
+    + '【笔记样本】\n' + body + '\n\n'
+    + '【输出要求】用 Markdown 输出，包含以下五个小节，每节 3-6 条要点，语言具体，不要空话：\n'
+    + '## 一、关注主题与兴趣分布\n## 二、高频核心概念\n## 三、价值倾向与判断标准\n## 四、表达习惯与文风特征\n## 五、可以写成文章的选题方向（列 5-8 个具体选题）';
+}
+var SYS_PROFILE = '你是个人知识画像分析师。只输出 Markdown 正文，不要代码块标记，不要额外寒暄。';
+$('btnProfileAI').onclick = function(){
+  if(!aiReady()) return;
+  var btn = $('btnProfileAI'); btn.disabled = true; btn.textContent = '分析中…';
+  callAI(SYS_PROFILE, buildProfilePrompt(), 0.6).then(function(out){
+    $('profileOutWrap').className = '';
+    $('profileOut').value = out;
+    btn.disabled = false; btn.textContent = 'AI 直接生成';
+    toast('画像已生成，确认后可保存');
+  }).catch(function(e){
+    btn.disabled = false; btn.textContent = 'AI 直接生成';
+    alert(aiErr(e));
+  });
+};
+$('btnProfileCopy').onclick = function(){
+  openPromptModal('画像提示词（手动模式）', buildProfilePrompt(), function(result){
+    $('profileOutWrap').className = '';
+    $('profileOut').value = result;
+    toast('已填入，确认后可保存');
+  });
+};
+$('btnProfileSave').onclick = function(){
+  var v = $('profileOut').value.trim();
+  if(!v){ toast('画像内容为空'); return; }
+  state.profiles.push({ id: uid(), saved_at: nowISO(), content: v, entryCount: state.entries.length });
+  save(); renderProfile(); toast('已保存为新的画像版本');
+};
+$('btnProfileCopyOut').onclick = function(){ copyText($('profileOut').value); };
+$('profileHistory').addEventListener('click', function(ev){
+  var b = ev.target.closest ? ev.target.closest('button[data-profile]') : null;
+  if(!b) return;
+  var pid = b.getAttribute('data-pid');
+  var p = state.profiles.filter(function(x){ return x.id === pid; })[0];
+  if(!p) return;
+  var act = b.getAttribute('data-profile');
+  if(act === 'copy'){ copyText(p.content); }
+  else if(act === 'use'){ $('profileOutWrap').className = ''; $('profileOut').value = p.content; toast('已载入，可编辑后另存为新版本'); }
+  else if(act === 'del'){ if(!confirm('删除这个画像版本？')) return; state.profiles = state.profiles.filter(function(x){ return x.id !== pid; }); save(); renderProfile(); }
+});
+
+/* 生成 */
+$('btnGenSearch').onclick = function(){
+  var topic = $('genTopic').value.trim();
+  if(!topic && !state.entries.length){ toast('知识库还是空的，先去采集'); return; }
+  var limit = parseInt($('genCount').value, 10) || 10;
+  var list = searchMaterials(topic, limit);
+  renderGenMaterials(list);
+  toast('检索到 ' + list.length + ' 条素材');
+};
+function buildGenPrompt(){
+  var topic = $('genTopic').value.trim();
+  if(!topic){
+    var tags = tagFreq().slice(0,3).map(function(t){ return t.w; });
+    topic = tags.length ? tags.join('、') : '我的读书与成长思考';
+  }
+  var kind = $('genKind').value;
+  var len = $('genLen').value;
+  var mats = selectedMaterials();
+  var disclaimer = $('genDisclaimer').checked;
+  var style = styleBlock();
+  return '请为「' + topic + '」写一篇公众号图文初稿。\n\n'
+    + '【作者画像】\n' + profileBlock() + '\n\n'
+    + (style ? '【作者文风样本（必须模仿这种语气与节奏，不要用书面套话）】\n' + style + '\n\n' : '')
+    + '【可使用的素材（来自作者自己的读书笔记，请自然融入，不要生硬罗列编号）】\n' + materialBlock(mats) + '\n\n'
+    + '【写作要求】\n'
+    + '1. 文体：' + kind + '；篇幅：' + len + '字。\n'
+    + '2. 站在作者本人视角写，第一人称，有观点、有例子，不要说教式空话。\n'
+    + '3. 只能使用上面素材和画像里的信息，不要编造作者没有提供的个人经历、数据或书名。\n'
+    + '4. 开头 3 行内必须抓住读者，结尾给一句能记住的话。\n'
+    + '5. 输出 Markdown：一级标题 + 3-5 个小节，段落短，适合手机阅读。\n'
+    + (disclaimer ? '6. 结尾附一句声明：本文仅为个人学习笔记与思考，不构成任何投资建议。\n' : '');
+}
+var SYS_GEN = '你是个人 IP 内容写作助手，帮作者写出「像他自己」的公众号图文。只输出 Markdown 正文，不要代码块标记，不要解释你的写作过程。';
+$('btnGenAI').onclick = function(){
+  if(!aiReady()) return;
+  if(!selectedMaterials().length){ toast('先点上面的「检索素材」并勾选素材'); return; }
+  var btn = $('btnGenAI'); btn.disabled = true; btn.textContent = '写作中…';
+  callAI(SYS_GEN, buildGenPrompt(), 0.85).then(function(out){
+    $('genOutWrap').className = '';
+    $('genOut').value = out;
+    btn.disabled = false; btn.textContent = 'AI 直接生成初稿';
+    toast('初稿完成，记得自己改一遍再发');
+  }).catch(function(e){
+    btn.disabled = false; btn.textContent = 'AI 直接生成初稿';
+    alert(aiErr(e));
+  });
+};
+$('btnGenCopy').onclick = function(){
+  openPromptModal('写作提示词（手动模式）', buildGenPrompt(), function(result){
+    $('genOutWrap').className = '';
+    $('genOut').value = result;
+    toast('已填入结果');
+  });
+};
+$('btnGenCopyOut').onclick = function(){ copyText($('genOut').value); };
+$('btnGenDownload').onclick = function(){
+  var v = $('genOut').value;
+  if(!v.trim()){ toast('还没有内容'); return; }
+  var blob = new Blob([v], { type:'text/markdown;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '文章-' + todayStr() + '.md';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  toast('已下载');
+};
+$('btnGenToLib').onclick = function(){
+  var v = $('genOut').value;
+  if(!v.trim()){ toast('还没有内容'); return; }
+  var r = addEntries([{ text:v, type:'idea', source:'generated', book:'', category:'我的文章', tags:['生成稿'] }]);
+  toast('已存回知识库' + (r.added ? '' : '（内容重复已跳过）'));
+};
+
+/* 设置 */
+$('btnToggleKey').onclick = function(){
+  var el = $('setKey');
+  el.type = el.type === 'password' ? 'text' : 'password';
+};
+$('btnSaveSettings').onclick = function(){
+  state.settings.apiKey = $('setKey').value.trim();
+  state.settings.baseUrl = $('setBase').value.trim() || 'https://api.deepseek.com';
+  state.settings.model = $('setModel').value.trim() || 'deepseek-v4-flash';
+  save(); toast('设置已保存');
+};
+$('btnTestApi').onclick = function(){
+  var key = $('setKey').value.trim();
+  if(!key){ toast('请先填写 API Key'); return; }
+  state.settings.apiKey = key;
+  state.settings.baseUrl = $('setBase').value.trim() || 'https://api.deepseek.com';
+  save();
+  var box = $('apiStatus');
+  box.innerHTML = '<div class="notice info"><span class="spin"></span>正在测试…</div>';
+  var base = state.settings.baseUrl.replace(/\/+$/,'');
+  fetch(base + '/models', { headers:{ 'Authorization':'Bearer ' + key } }).then(function(res){
+    if(!res.ok) return res.text().then(function(t){ throw new Error('HTTP ' + res.status + ' ' + String(t).slice(0,150)); });
+    return res.json();
+  }).then(function(d){
+    var ids = (d.data || []).map(function(m){ return m.id; });
+    box.innerHTML = '<div class="notice ok">连接成功！可用模型：' + esc(ids.join('、') || '（未返回列表）') + '<br>把想用的模型名填到上面的「模型名」框里即可。</div>';
+  }).catch(function(e){
+    var msg = String(e.message || e);
+    var tip = /Failed to fetch|NetworkError|Load failed/i.test(msg)
+      ? '无法连接（网络或浏览器跨域限制）。不影响使用：所有 AI 功能都可以用「复制提示词（手动模式）」完成。'
+      : msg;
+    box.innerHTML = '<div class="notice err">' + esc(tip) + '</div>';
+  });
+};
+function exportObj(){
+  var copy = { entries: state.entries, profiles: state.profiles, settings: {} };
+  for(var k in state.settings){ if(k !== 'apiKey') copy.settings[k] = state.settings[k]; }
+  return copy;
+}
+function mergeEntries(list){
+  var seen = {};
+  state.entries.forEach(function(e){ seen[e.fingerprint || fp(e.text || '')] = 1; });
+  var added = 0, skipped = 0;
+  list.forEach(function(item){
+    if(!item || !item.text) return;
+    var f = item.fingerprint || fp(item.text);
+    if(seen[f]){ skipped++; return; }
+    seen[f] = 1;
+    var e = {};
+    for(var k in item){ e[k] = item[k]; }
+    if(!e.id) e.id = uid();
+    e.fingerprint = f;
+    state.entries.push(e);
+    added++;
+  });
+  return { added: added, skipped: skipped };
+}
+function mergeProfiles(list){
+  if(!Array.isArray(list)) return 0;
+  var added = 0;
+  list.forEach(function(p){
+    if(!p) return;
+    var dup = state.profiles.some(function(x){ return String(x.content) === String(p.content); });
+    if(!dup){ state.profiles.push(p); added++; }
+  });
+  return added;
+}
+$('btnExport').onclick = function(){
+  var data = JSON.stringify(exportObj(), null, 1);
+  var blob = new Blob([data], { type:'application/json;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '知识库备份-' + todayStr() + '.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  toast('备份已下载，请存到 D:\\看书笔记\\知识库工具\\');
+};
+$('btnImport').onclick = function(){ $('importInput').click(); };
+$('importInput').onchange = function(){
+  var f = $('importInput').files[0];
+  if(!f) return;
+  var fr = new FileReader();
+  fr.onload = function(){
+    try{
+      var d = JSON.parse(fr.result);
+      if(!d || !Array.isArray(d.entries)) throw new Error('文件格式不对');
+      var doMerge = confirm('这个备份怎么用？\n\n【确定】= 合并（保留现在的 ' + state.entries.length + ' 条，只补新的，推荐）\n【取消】= 覆盖（用备份里的 ' + d.entries.length + ' 条替换全部）');
+      if(doMerge){
+        var r = mergeEntries(d.entries);
+        var pa = mergeProfiles(d.profiles);
+        if(d.settings && !state.settings.styleSample && d.settings.styleSample) state.settings.styleSample = d.settings.styleSample;
+        save(); renderAll();
+        toast('合并完成：新增 ' + r.added + ' 条，跳过重复 ' + r.skipped + ' 条' + (pa ? '，画像 +' + pa : ''));
+        return;
+      }
+      if(!confirm('覆盖会丢掉当前全部数据（' + state.entries.length + ' 条），确定吗？')) return;
+      if(d.settings) d.settings.apiKey = state.settings.apiKey;
+      state.entries = d.entries;
+      state.profiles = d.profiles || [];
+      if(d.settings) state.settings = Object.assign(state.settings, d.settings);
+      save(); renderAll(); toast('导入完成');
+    }catch(e){ alert('导入失败：' + e.message); }
+  };
+  fr.readAsText(f);
+  $('importInput').value = '';
+};
+/* 设置：手机 ↔ 电脑 搬运 */
+$('btnCopyData').onclick = function(){
+  var data = JSON.stringify(exportObj());
+  copyText(data);
+  $('mobileStatus').innerHTML = '<div class="notice ok">已复制约 ' + (data.length/1024).toFixed(1) + ' KB（含 ' + state.entries.length + ' 条笔记）。粘到微信「文件传输助手」发给自己，在另一台设备上粘贴合并即可。</div>';
+};
+$('btnPasteToggle').onclick = function(){
+  $('pasteArea').className = '';
+  $('pasteData').value = '';
+  try{ $('pasteData').focus(); }catch(e){}
+};
+$('btnPasteCancel').onclick = function(){ $('pasteArea').className = 'hidden'; };
+$('btnPasteMerge').onclick = function(){
+  var raw = $('pasteData').value.trim();
+  if(!raw){ toast('还没有粘贴内容'); return; }
+  var d = null;
+  try{ d = JSON.parse(raw); }catch(e){
+    alert('格式不对：请确认粘的是完整的一段 JSON（以 {"entries" 开头、以 } 结尾）。\n\n如果复制时被截断了，重新点一次「复制数据到剪贴板」再发一次。');
+    return;
+  }
+  if(!d || !Array.isArray(d.entries)){ alert('格式不对：这段数据里没有 entries 列表。'); return; }
+  var r = mergeEntries(d.entries);
+  var pa = mergeProfiles(d.profiles);
+  save(); renderAll();
+  $('pasteArea').className = 'hidden';
+  $('pasteData').value = '';
+  $('mobileStatus').innerHTML = '<div class="notice ok">合并完成：新增 ' + r.added + ' 条，跳过重复 ' + r.skipped + ' 条' + (pa ? '，画像 +' + pa + ' 版' : '') + '。现在共 ' + state.entries.length + ' 条笔记。</div>';
+  toast('合并完成：新增 ' + r.added + ' 条');
+};
+$('btnClear').onclick = function(){
+  if(!confirm('这会删除全部笔记和画像，且无法恢复。确定吗？')) return;
+  if(!confirm('再确认一次：真的要清空吗？建议先导出备份。')) return;
+  state.entries = []; state.profiles = [];
+  save(); renderAll(); toast('已清空');
+};
+
+/* 启动 */
+checkStorage();
+load();
+renderAll();
+})();
+</script>
+</body>
+</html>
